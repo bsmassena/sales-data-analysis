@@ -1,5 +1,7 @@
-package com.bsmlima.salesdataanalysis;
+package com.bsmlima.salesdataanalysis.application;
 
+import com.bsmlima.salesdataanalysis.DirectoryWatcher;
+import com.bsmlima.salesdataanalysis.application.AppConfig;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.AnnotationConfigApplicationContext;
 

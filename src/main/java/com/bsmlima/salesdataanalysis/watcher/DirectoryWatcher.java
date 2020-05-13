@@ -1,7 +1,7 @@
 package com.bsmlima.salesdataanalysis;
 
 import com.bsmlima.salesdataanalysis.dao.ReportDao;
-import com.bsmlima.salesdataanalysis.parser.FileParser;
+import com.bsmlima.salesdataanalysis.service.ReportService;
 
 import java.io.IOException;
 import java.nio.file.*;
@@ -9,10 +9,10 @@ import java.nio.file.*;
 public class DirectoryWatcher {
 
     private final WatchService watchService;
-    private FileParser fileParser;
+    private ReportService reportService;
 
-    public DirectoryWatcher(FileParser fileParser, ReportDao reportDao) throws IOException {
-        this.fileParser = fileParser;
+    public DirectoryWatcher(ReportService reportService, ReportDao reportDao) throws IOException {
+        this.reportService = reportService;
         this.watchService = FileSystems.getDefault().newWatchService();
 
         Path path = Paths.get(reportDao.getInputPath());
@@ -23,7 +23,9 @@ public class DirectoryWatcher {
         while (true) {
             WatchKey queuedKey = watchService.take();
             for (WatchEvent<?> watchEvent : queuedKey.pollEvents()) {
-                fileParser.parse(watchEvent.context().toString()); // TODO: catch errors on parsing
+                try {
+                    reportService.processFile(watchEvent.context().toString()); // TODO: catch errors on parsing
+                } catch ()
                 queuedKey.reset();
             }
         }
