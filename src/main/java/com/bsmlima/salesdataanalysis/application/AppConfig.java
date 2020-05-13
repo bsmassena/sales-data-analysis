@@ -1,7 +1,9 @@
-package com.bsmlima.salesdataanalysis;
+package com.bsmlima.salesdataanalysis.application;
 
+import com.bsmlima.salesdataanalysis.watcher.DirectoryWatcher;
 import com.bsmlima.salesdataanalysis.dao.ReportDao;
 import com.bsmlima.salesdataanalysis.parser.*;
+import com.bsmlima.salesdataanalysis.service.ReportService;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
@@ -50,12 +52,17 @@ public class AppConfig {
 
     @Bean
     public FileParser fileParser() {
-        return new FileParser(reportDao(), parsersHashMap());
+        return new FileParser(parsersHashMap());
     }
 
     @Bean
     public DirectoryWatcher directoryWatcher() throws IOException {
-        return new DirectoryWatcher(fileParser(), reportDao());
+        return new DirectoryWatcher(reportService(), reportDao());
+    }
+
+    @Bean
+    public ReportService reportService() {
+        return new ReportService(fileParser(), reportDao());
     }
 
 }

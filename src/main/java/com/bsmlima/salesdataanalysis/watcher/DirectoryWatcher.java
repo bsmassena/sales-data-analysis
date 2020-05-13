@@ -1,4 +1,4 @@
-package com.bsmlima.salesdataanalysis;
+package com.bsmlima.salesdataanalysis.watcher;
 
 import com.bsmlima.salesdataanalysis.dao.ReportDao;
 import com.bsmlima.salesdataanalysis.service.ReportService;
@@ -19,13 +19,16 @@ public class DirectoryWatcher {
         path.register(watchService, StandardWatchEventKinds.ENTRY_CREATE);
     }
 
-    public void watch() throws InterruptedException, IOException {
+    public void watch() throws InterruptedException {
         while (true) {
             WatchKey queuedKey = watchService.take();
             for (WatchEvent<?> watchEvent : queuedKey.pollEvents()) {
                 try {
-                    reportService.processFile(watchEvent.context().toString()); // TODO: catch errors on parsing
-                } catch ()
+                    reportService.processFile(watchEvent.context().toString());
+                } catch (IOException e) {
+                    System.out.println("Error: unable to process file " + watchEvent.context().toString());
+                    e.printStackTrace();
+                }
                 queuedKey.reset();
             }
         }
