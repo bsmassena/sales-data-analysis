@@ -1,9 +1,11 @@
 plugins {
     id 'java'
+    id 'application'
 }
 
 group 'com.bsmlima'
 version '1.0-SNAPSHOT'
+mainClassName = 'com.bsmlima.salesdataanalysis.application.Application'
 
 repositories {
     mavenCentral()
